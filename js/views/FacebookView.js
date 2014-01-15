@@ -295,7 +295,7 @@ define([
                         _.each(response.to, function (fbid) {
                             // create new model in the collection
                             that.collection_friends.create({
-                                id:         fbid + _.aa.instance.aa_inst_id,
+                                id:         fbid + _.aa.instance.i_id,
                                 fbid:       fbid,
                                 request_id: response.request
                             });

@@ -16,12 +16,12 @@ namespace com\apparena\modules\facebook;
 class getUserLog
 {
     private $_db = null;
-    private $_aa_inst_id = null;
+    private $_i_id = null;
 
-    public function __construct(\com\apparena\utils\database\Database $db, $aa_inst_id)
+    public function __construct(\com\apparena\utils\database\Database $db, $i_id)
     {
         $this->_db         = $db;
-        $this->_aa_inst_id = $aa_inst_id;
+        $this->_i_id = $i_id;
     }
 
     public function getInvitedAmountByInst()
@@ -154,7 +154,7 @@ class getUserLog
                 FROM
                     mod_log_user
                 WHERE
-                    aa_inst_id = " . $this->_db->quote($this->_aa_inst_id) . "
+                    i_id = " . $this->_db->quote($this->_i_id) . "
                     " . $where . "
                 AND code = " . $this->_db->quote($code) . "
                 ";
@@ -166,7 +166,7 @@ class getUserLog
 
     protected function checkInstId()
     {
-        if (!is_numeric($this->_aa_inst_id) || $this->_aa_inst_id === null)
+        if (!is_numeric($this->_i_id) || $this->_i_id === null)
         {
             throw new \Exception('Instance ID is not numeric');
         }

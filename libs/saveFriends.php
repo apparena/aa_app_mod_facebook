@@ -7,7 +7,7 @@ define('ROW_REQUEST_ID', 'request_id');
 define('ROW_FB_UID', 'fb_uid');
 define('ROW_AUTH_UID', 'auth_uid');
 define('ROW_DOOR_ID', 'door_id');
-define('ROW_AA_INST_ID', 'aa_inst_id');
+define('ROW_i_id', 'i_id');
 define('ROW_DATE_ADDED', 'date_added');
 
 try
@@ -29,7 +29,7 @@ try
                 " . ROW_FB_UID . " = :" . ROW_FB_UID . ",
                 " . ROW_AUTH_UID . " = :" . ROW_AUTH_UID . ",
                 " . ROW_DOOR_ID . " = :" . ROW_DOOR_ID . ",
-                " . ROW_AA_INST_ID . " = :" . ROW_AA_INST_ID . ",
+                " . ROW_i_id . " = :" . ROW_i_id . ",
                 " . ROW_DATE_ADDED . " = FROM_UNIXTIME(:" . ROW_DATE_ADDED . ")
             ";
 
@@ -42,7 +42,7 @@ try
     $stmt->bindParam(':' . ROW_REQUEST_ID, $request_id, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_FB_UID, $fb_id, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_AUTH_UID, $auth_uid, PDO::PARAM_INT);
-    $stmt->bindParam(':' . ROW_AA_INST_ID, $aa_inst_id, PDO::PARAM_INT);
+    $stmt->bindParam(':' . ROW_i_id, $i_id, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_DOOR_ID, $door_id, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_DATE_ADDED, $timestamp, PDO::PARAM_STR);
 
