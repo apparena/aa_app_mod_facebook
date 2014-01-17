@@ -2,7 +2,7 @@ define([
     'CollectionExtend',
     'underscore',
     'backbone',
-    'modules/facebook/js/models/SelectedFriendModel',
+    'modules/aa_app_mod_facebook/js/models/SelectedFriendModel',
     'localstorage'
 ], function (Collection, _, Backbone, SelectedFriendModel) {
     'use strict';

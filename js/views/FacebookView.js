@@ -18,10 +18,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'modules/facebook/js/models/ShareModel',
-    'modules/facebook/js/models/FriendsModel',
-    'modules/facebook/js/collections/FriendsCollection',
-    'modules/facebook/js/models/LoginModel'
+    'modules/aa_app_mod_facebook/js/models/ShareModel',
+    'modules/aa_app_mod_facebook/js/models/FriendsModel',
+    'modules/aa_app_mod_facebook/js/collections/FriendsCollection',
+    'modules/aa_app_mod_facebook/js/models/LoginModel'
 ], function (View, $, _, Backbone, ShareModel, FriendsModel, FriendsCollection, LoginModel) {
     'use strict';
 
