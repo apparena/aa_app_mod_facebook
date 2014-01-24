@@ -10,7 +10,7 @@ define([
         Model.namespace = 'facebookLoginModel';
 
         Model.code = Backbone.Model.extend({
-            localStorage: new Backbone.LocalStorage('AppArenaAdventskalenderApp_' + _.aa.instance.i_id + '_FbLoginData'),
+            localStorage: new Backbone.LocalStorage('aa_app_mod_facebook_' + _.aa.instance.i_id + '_FbLoginData'),
 
             defaults: {
                 'id':         1,
@@ -21,7 +21,8 @@ define([
                 'lastname':   '',
                 'city':       '',
                 'gender':     'men',
-                'login_type': 'fbuser'
+                'login_type': 'fbuser',
+                'logintime':  ''
             }
         });
 
