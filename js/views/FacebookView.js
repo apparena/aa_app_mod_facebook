@@ -385,7 +385,7 @@ define([
                 require([this.facebook], function (FB) {
                     var fb_app_url = _.aa.instance.share_url + '&og-object=' + obj.object + '&share-door=' + obj.door_index;
 
-                    _.debug.log(fb_app_url);
+                    //_.debug.log(fb_app_url);
 
                     that.login('publish_actions', function (resp) {
                         obj[obj.object] = fb_app_url;
