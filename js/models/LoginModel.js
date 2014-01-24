@@ -21,7 +21,8 @@ define([
                 'lastname':   '',
                 'city':       '',
                 'gender':     'men',
-                'login_type': 'fbuser'
+                'login_type': 'fbuser',
+                'logintime':  ''
             }
         });
 
