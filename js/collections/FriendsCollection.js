@@ -11,7 +11,7 @@ define([
         Collection.namespace = 'facebookFriendsCollection';
 
         Collection.code = Backbone.Collection.extend({
-            localStorage: new Backbone.LocalStorage('AppArenaAdventskalenderApp_SelectedFacebookFirends'),
+            localStorage: new Backbone.LocalStorage('aa_app_mod_facebook_' + _.aa.instance.i_id + 'SelectedFacebookFirends'),
 
             model: SelectedFriendModel().code,
 

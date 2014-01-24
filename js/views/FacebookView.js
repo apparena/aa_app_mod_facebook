@@ -53,7 +53,7 @@ define([
                 this.model_friends = FriendsModel().init();
 
                 this.collection_friends = FriendsCollection().init();
-                //this.collection_friends.on('add', this.saveFriendInDatabase, this);
+                this.collection_friends.on('add', this.saveFriendInDatabase, this);
 
                 this.model_login = LoginModel().init();
             },
@@ -161,7 +161,8 @@ define([
                             'firstname': data.firstname,
                             'lastname':  data.lastname,
                             'city':      data.city,
-                            'gender':    data.gender
+                            'gender':    data.gender,
+                            'logintime': _.uniqueId()
                         });
                         that.model_login.save();
 
@@ -384,7 +385,7 @@ define([
                 require([this.facebook], function (FB) {
                     var fb_app_url = _.aa.instance.share_url + '&og-object=' + obj.object + '&share-door=' + obj.door_index;
 
-                    _.debug.log(fb_app_url);
+                    //_.debug.log(fb_app_url);
 
                     that.login('publish_actions', function (resp) {
                         obj[obj.object] = fb_app_url;
