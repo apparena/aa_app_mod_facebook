@@ -12,9 +12,22 @@ This is a module of the [aa_app_template](https://github.com/apparena/aa_app_tem
 * Nothing
 
 ### Example
-```javascript
-
 ```
+Multi Friend Selector
+To Call the Multi Friend Selector use this snippet:
+
+var facebook = FacebookView().init();
+
+        facebook.model_friends.set({
+            title:   'mein App Titel',
+            message: 'Meine Nachricht an meine Freunde',
+            data:    {}
+        });
+
+        facebook.login('email', function(){
+            facebook.friendsSelector();
+        });
+```        
 
 ### Load module with require
 ```
