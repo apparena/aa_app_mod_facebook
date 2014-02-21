@@ -247,15 +247,11 @@ define([
                 this.fbUiCall(this.model_share.toJSON(), callback);
             },
 
-            friendsSelector: function (callback, door_id) {
+            friendsSelector: function (callback) {
                 if (typeof callback !== 'function') {
                     callback = function () {
                         //do nothing
                     };
-                }
-
-                if (_.isUndefined(door_id)) {
-                    door_id = _.current_door_id;
                 }
 
                 this.callbackStorage = callback;
@@ -264,15 +260,20 @@ define([
                     selected_friends = this.getSelectedFriends();
                 this.model_friends.set('exclude_ids', selected_friends);
                 this.fbUiCall(this.model_friends.toJSON(), function (resp) {
-                    that.saveSelectedFriends(resp, door_id);
+                    that.saveSelectedFriends(resp);
                 });
             },
 
             getSelectedFriends: function () {
-                return this.collection_friends.pluck('fbid');
+                var res = this.collection_friends.pluck('fbid');
+
+                if(res.length === 1 && res[0] === '') {
+                    res = '';
+                }
+                return res;
             },
 
-            saveSelectedFriends: function (response, door_id) {
+            saveSelectedFriends: function (response) {
                 if (typeof response !== 'undefined') {
                     var that = this,
                         request_length = response.request.split(',');
@@ -283,8 +284,7 @@ define([
                         code:          5001,
                         data_obj:      {
                             'amount':      response.to.length,
-                            'request_ids': response.request,
-                            'door_id':     door_id
+                            'request_ids': response.request
                         }
                     });
 
@@ -309,8 +309,7 @@ define([
                 // get last inserted model
                 var last_model = _.last(this.collection_friends.models);
                 last_model.set({
-                    'auth_uid': _.uid,
-                    'door_id':  _.current_door_id
+                    'auth_uid': _.uid
                 });
                 // safe attribute into database
                 this.ajax(last_model.attributes);
@@ -324,8 +323,7 @@ define([
                     code:          5002,
                     data_obj:      {
                         'request_id': _.aa.fb.request_id,
-                        'invited_by': _.aa.fb.invited_by,
-                        'door_id':    _.aa.fb.invited_for_door
+                        'invited_by': _.aa.fb.invited_by
                     }
                 });
             },
@@ -383,7 +381,7 @@ define([
             openGraphPost: function (obj, callback) {
                 var that = this;
                 require([this.facebook], function (FB) {
-                    var fb_app_url = _.aa.instance.share_url + '&og-object=' + obj.object + '&share-door=' + obj.door_index;
+                    var fb_app_url = _.aa.instance.share_url + '&og-object=' + obj.object;
 
                     //_.debug.log(fb_app_url);
 
