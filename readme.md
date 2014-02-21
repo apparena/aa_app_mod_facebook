@@ -17,6 +17,8 @@ Login, Share, Friend Selector, Send, OpenGraph Posts
 modules/aa_app_mod_facebook/js/views/FacebookView
 ```
 
+## Module methodes
+
 ### Multi Friend Selector
 To call the Multi Friend Selector use the following snippet:
 ```
