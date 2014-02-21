@@ -1,12 +1,13 @@
 # App-Arena.com App Module: Facebook
 Github: https://github.com/apparena/aa_app_mod_facebook
 
-Docs:   http://www.app-arena.com/docs/display/developer
+Docs:   http://www.appalizr.com/index.php/facebook.html
 
 This is a module of the [aa_app_template](https://github.com/apparena/aa_app_template)
 
 ## Module job
-...
+Handles all interactions with the Facbook API. 
+Login, Share, Friend Selector, Send, OpenGraph Posts
 
 ### Dependencies
 * Nothing
@@ -45,6 +46,7 @@ To call the Facebook Share Function use the following snippet:
         facebook.share();
     });
 ```
+For full list of elements -> [Facebook Documentation Share](https://developers.facebook.com/docs/reference/dialogs/feed/)
 
 ### Facebook Send
 To call the Facebook Send Function use the following snippet:
@@ -57,3 +59,17 @@ To call the Facebook Send Function use the following snippet:
         facebook.send(options);
     });
 ```
+For full list of elements -> [Facebook Documentation Send](https://developers.facebook.com/docs/reference/dialogs/send/)
+
+### Facebook Post
+To call the Facebook Send Function use the following snippet:
+```
+    facebook.login('email', function(){
+        var obj = new Object();
+        obj.title = ''; //title
+        obj.message = ''; //message
+        obj.redirect_uri = ''; //redirection after click on send button
+        facebook.send(obj);
+    });
+```
+For full list of elements -> [Facebook Documentation Send](https://developers.facebook.com/docs/reference/api/post/)
