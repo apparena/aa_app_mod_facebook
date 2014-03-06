@@ -9,7 +9,7 @@ define([
 
         Model.code = Backbone.Model.extend({
             defaults: {
-                module:     'facebook',
+                module:     'aa_app_mod_facebook',
                 action:     'saveFriends',
                 fbid:       '',
                 request_id: ''
