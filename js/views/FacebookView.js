@@ -247,15 +247,11 @@ define([
                 this.fbUiCall(this.model_share.toJSON(), callback);
             },
 
-            friendsSelector: function (callback, door_id) {
+            friendsSelector: function (callback) {
                 if (typeof callback !== 'function') {
                     callback = function () {
                         //do nothing
                     };
-                }
-
-                if (_.isUndefined(door_id)) {
-                    door_id = _.current_door_id;
                 }
 
                 this.callbackStorage = callback;
@@ -264,12 +260,16 @@ define([
                     selected_friends = this.getSelectedFriends();
                 this.model_friends.set('exclude_ids', selected_friends);
                 this.fbUiCall(this.model_friends.toJSON(), function (resp) {
-                    that.saveSelectedFriends(resp, door_id);
+                    that.saveSelectedFriends(resp);
                 });
             },
 
             getSelectedFriends: function () {
-                return this.collection_friends.pluck('fbid');
+                var res = this.collection_friends.pluck('fbid');
+                if(res.length === 1 && res[0] === '') {
+                    res = '';
+                }
+                return res;
             },
 
             saveSelectedFriends: function (response, door_id) {
