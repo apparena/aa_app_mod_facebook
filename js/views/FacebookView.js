@@ -53,7 +53,7 @@ define([
                 this.model_friends = FriendsModel().init();
 
                 this.collection_friends = FriendsCollection().init();
-                this.collection_friends.on('add', this.saveFriendInDatabase, this);
+                //this.collection_friends.on('add', this.saveFriendInDatabase, this);
 
                 this.model_login = LoginModel().init();
             },
@@ -70,19 +70,21 @@ define([
             },
 
             libInit: function () {
-                if (!$('body').hasClass('fb-init')) {
-                    require([this.facebook], function (FB) {
-                        FB.init({
-                            appId:               _.aa.instance.fb_app_id, // App ID
-                            channelUrl:          _.aa.instance.fb_canvas_url + 'channel.html', // Channel File
-                            status:              true, // check login status
-                            cookie:              true, // enable cookies to allow the server to access the session
-                            xfbml:               true, // parse XFBML
-                            oauth:               true,
-                            frictionlessRequest: true
-                        });
+                //if (!$('body').hasClass('fb-init')) {
+                require([this.facebook], function (FB) {
+                    FB.init({
+                        appId:                _.aa.instance.fb_app_id, // App ID
+                        channelUrl:           _.aa.instance.fb_canvas_url + 'channel.html', // Channel File
+                        status:               true, // check login status
+                        cookie:               true, // enable cookies to allow the server to access the session
+                        xfbml:                true, // parse XFBML
+                        oauth:                true,
+                        frictionlessRequests: true
                     });
-                }
+
+                    $('body').addClass('fb-init');
+                });
+                //}
                 return this;
             },
 
@@ -258,24 +260,30 @@ define([
 
                 var that = this,
                     selected_friends = this.getSelectedFriends();
+
                 this.model_friends.set('exclude_ids', selected_friends);
                 this.fbUiCall(this.model_friends.toJSON(), function (resp) {
+                    _.debug.log(resp);
                     that.saveSelectedFriends(resp);
                 });
             },
 
             getSelectedFriends: function () {
-                var res = this.collection_friends.pluck('fbid');
-                if(res.length === 1 && res[0] === '') {
-                    res = '';
+                var friends = this.collection_friends.pluck('fbid');
+
+                if (friends.length === 1 && _.isEmpty(friends[0])) {
+                    // return empty value
+                    friends = '';
+                } else if (friends.length > 1 && _.isEmpty(friends[0])) {
+                    // remove first array element
+                    friends.splice(0, 1);
                 }
-                return res;
+                return friends;
             },
 
-            saveSelectedFriends: function (response, door_id) {
+            saveSelectedFriends: function (response) {
                 if (typeof response !== 'undefined') {
-                    var that = this,
-                        request_length = response.request.split(',');
+                    var that = this;
 
                     this.log('action', 'user_facebook_friends_amount', {
                         auth_uid:      _.uid,
@@ -283,13 +291,15 @@ define([
                         code:          5001,
                         data_obj:      {
                             'amount':      response.to.length,
-                            'request_ids': response.request,
-                            'door_id':     door_id
+                            'request_ids': response.request
                         }
                     });
 
                     // start stored callback function
                     this.callbackStorage(response);
+
+                    this.collection_friends.off('add');
+                    this.collection_friends.on('add', this.saveFriendInDatabase, this);
 
                     if (typeof response !== 'undefined' && typeof response.to !== 'undefined') {
                         // put all friends into a new model and store them in a collection
@@ -309,8 +319,7 @@ define([
                 // get last inserted model
                 var last_model = _.last(this.collection_friends.models);
                 last_model.set({
-                    'auth_uid': _.uid,
-                    'door_id':  _.current_door_id
+                    'auth_uid': _.uid
                 });
                 // safe attribute into database
                 this.ajax(last_model.attributes);
@@ -324,8 +333,7 @@ define([
                     code:          5002,
                     data_obj:      {
                         'request_id': _.aa.fb.request_id,
-                        'invited_by': _.aa.fb.invited_by,
-                        'door_id':    _.aa.fb.invited_for_door
+                        'invited_by': _.aa.fb.invited_by
                     }
                 });
             },
@@ -381,17 +389,22 @@ define([
             },
 
             openGraphPost: function (obj, callback) {
-                var that = this;
+                var that = this,
+                    params = obj.params || '';
                 require([this.facebook], function (FB) {
-                    var fb_app_url = _.aa.instance.share_url + '&og-object=' + obj.object + '&share-door=' + obj.door_index;
+                    var fb_app_url = _.aa.instance.share_url + '?og-object=' + obj.object + params;
 
                     //_.debug.log(fb_app_url);
 
                     that.login('publish_actions', function (resp) {
                         obj[obj.object] = fb_app_url;
+
+                        //_.debug.log('FB login check done', resp);
+
                         FB.api(
-                            '/me/' + _.aa.instance.fb_app_url + ':' + obj.action,
-                            'post', obj,
+                            '/me/' + _.aa.instance.fb_app_namespace + ':' + obj.action,
+                            'post',
+                            obj,
                             function (resp) {
                                 _.debug.log('open graph resp', resp);
                                 if (typeof callback === 'function') {
@@ -406,5 +419,5 @@ define([
         });
 
         return View;
-    }
+    };
 });

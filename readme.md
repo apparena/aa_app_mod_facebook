@@ -5,7 +5,7 @@ Docs: http://www.appalizr.com/index.php/facebook.html
 This is a module of the [aa_app_template](https://github.com/apparena/aa_app_template)
 
 ## Module job
-Handles all interactions with the Facbook API. 
+Handles all interactions with the Facbook API.
 Login, Share, Friend Selector, Send, OpenGraph Posts
 
 ### Dependencies
@@ -21,13 +21,10 @@ To call the Multi Friend Selector use the following snippet:
 ```
     facebook.model_friends.set({
         title:   'mein App Titel',
-        message: 'Meine Nachricht an meine Freunde',
-        data:    {}
+        message: 'Meine Nachricht an meine Freunde'
     });
 
-    facebook.login('email', function(){
-        facebook.friendsSelector();
-    });
+    facebook.friendsSelector();
 ```
 
 ### Facebook Share

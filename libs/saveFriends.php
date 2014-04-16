@@ -6,7 +6,6 @@ define('TBL_MAIN', 'mod_facebook_friends');
 define('ROW_REQUEST_ID', 'request_id');
 define('ROW_FB_UID', 'fb_uid');
 define('ROW_AUTH_UID', 'auth_uid');
-define('ROW_DOOR_ID', 'door_id');
 define('ROW_I_ID', 'i_id');
 define('ROW_DATE_ADDED', 'date_added');
 
@@ -18,7 +17,6 @@ try
     }
     $fb_id    = (int)$_POST['fbid'];
     $auth_uid = (int)$_POST['auth_uid'];
-    $door_id  = (int)$_POST['door_id'];
     $request_id = $_POST['request_id'];
 
     // prepare sql statement
@@ -28,14 +26,12 @@ try
                 " . ROW_REQUEST_ID . " = :" . ROW_REQUEST_ID . ",
                 " . ROW_FB_UID . " = :" . ROW_FB_UID . ",
                 " . ROW_AUTH_UID . " = :" . ROW_AUTH_UID . ",
-                " . ROW_DOOR_ID . " = :" . ROW_DOOR_ID . ",
                 " . ROW_I_ID . " = :" . ROW_I_ID . ",
                 " . ROW_DATE_ADDED . " = FROM_UNIXTIME(:" . ROW_DATE_ADDED . ")
             ";
 
     // prepare timestamp
-    $current_day = new DateTime('now', new DateTimeZone($aa_default_timezone));
-    $timestamp   = $current_day->getTimestamp();
+    $timestamp   = $current_date->getTimestamp();
 
     // prepare db statement and bind data
     $stmt = $db->prepare($sql);
@@ -43,7 +39,6 @@ try
     $stmt->bindParam(':' . ROW_FB_UID, $fb_id, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_AUTH_UID, $auth_uid, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_I_ID, $i_id, PDO::PARAM_INT);
-    $stmt->bindParam(':' . ROW_DOOR_ID, $door_id, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_DATE_ADDED, $timestamp, PDO::PARAM_STR);
 
     if ($stmt->execute())
