@@ -14,14 +14,9 @@ require.config({
 });
 
 define([
-    'ViewExtend',
-    'jquery',
-    'underscore',
-    'backbone',
-    'modules/aa_app_mod_facebook/js/models/ShareModel',
+    'ViewExtend', 'jquery', 'underscore', 'backbone', 'modules/aa_app_mod_facebook/js/models/ShareModel',
     'modules/aa_app_mod_facebook/js/models/FriendsModel',
-    'modules/aa_app_mod_facebook/js/collections/FriendsCollection',
-    'modules/aa_app_mod_facebook/js/models/LoginModel'
+    'modules/aa_app_mod_facebook/js/collections/FriendsCollection', 'modules/aa_app_mod_facebook/js/models/LoginModel'
 ], function (View, $, _, Backbone, ShareModel, FriendsModel, FriendsCollection, LoginModel) {
     'use strict';
 
@@ -29,15 +24,17 @@ define([
         View.namespace = 'facebook';
 
         View.code = Backbone.View.extend({
-            el: $('#fb-root'),
+            //el: $('#fb-root'),
+            el: $('body'),
+
+            events: {
+                'click .btn-facebook': 'friendsSelector'
+            },
 
             callbackStorage: null,
 
             initialize: function () {
-                _.bindAll(this, 'createElement', 'libInit', 'addClickEventListener', 'login', 'getUserData',
-                    'logout', 'autoGrow', 'autoScrollTo', 'scrollTo', 'getScrollPosition', 'share', 'friendsSelector',
-                    'getSelectedFriends', 'saveSelectedFriends', 'saveFriendInDatabase', 'handleFriendReturns', 'handleCallback',
-                    'fbUiCall', 'like', 'send', 'openGraphPost');
+                _.bindAll(this, 'createElement', 'libInit', 'addClickEventListener', 'login', 'getUserData', 'logout', 'autoGrow', 'autoScrollTo', 'scrollTo', 'getScrollPosition', 'share', 'friendsSelector', 'getSelectedFriends', 'saveSelectedFriends', 'saveFriendInDatabase', 'handleFriendReturns', 'handleCallback', 'fbUiCall', 'like', 'send', 'openGraphPost');
 
                 // we must store the require config value into the global scope for build process
                 this.facebook = 'facebook_us';
@@ -85,13 +82,14 @@ define([
                     $('body').addClass('fb-init');
                 });
                 //}
+
+                this.autoGrow();
                 return this;
             },
 
             addClickEventListener: function () {
                 // add click event listener on FB login buttons
-                var that = this,
-                    connect = $('.fbconnect');
+                var that = this, connect = $('.fbconnect');
                 connect.off('click');
                 connect.on('click', function () {
                     that.login();
@@ -123,8 +121,7 @@ define([
 
                 require([this.facebook], function (FB) {
                     FB.api('/me', function (response) {
-                        var data = that.model_login.toJSON(),
-                            city, birthday;
+                        var data = that.model_login.toJSON(), city, birthday;
 
                         if (typeof( response.id ) !== 'undefined' && parseInt(response.id, 10) > 0) {
                             data.fbid = parseInt(response.id, 10);
@@ -194,8 +191,7 @@ define([
             },
 
             autoGrow: function () {
-                var body = $('body'),
-                    that = this;
+                var body = $('body'), that = this;
                 if (body.hasClass('website') === false) {
                     require([this.facebook], function (FB) {
                         FB.Canvas.setAutoGrow();
@@ -249,22 +245,31 @@ define([
                 this.fbUiCall(this.model_share.toJSON(), callback);
             },
 
-            friendsSelector: function (callback) {
-                if (typeof callback !== 'function') {
-                    callback = function () {
-                        //do nothing
-                    };
+            friendsSelector: function (elem, callback, data) {
+                elem = elem || '';
+
+                callback = callback || function () {
+                    //do nothing
+                };
+
+                data = data || '';
+                if (_.isEmpty(data) || _.isUndefined(data)) {
+                    data = $(elem.currentTarget).data('additional');
                 }
 
                 this.callbackStorage = callback;
 
-                var that = this,
-                    selected_friends = this.getSelectedFriends();
+                var that = this, selected_friends = this.getSelectedFriends();
 
-                this.model_friends.set('exclude_ids', selected_friends);
+                this.model_friends.set({
+                    title:       _.c('general_title').substring(0, 44),
+                    message:     _.c('general_desc').substring(0, 199),
+                    exclude_ids: selected_friends
+                });
+
                 this.fbUiCall(this.model_friends.toJSON(), function (resp) {
-                    _.debug.log(resp);
-                    that.saveSelectedFriends(resp);
+                    //_.debug.log(resp);
+                    that.saveSelectedFriends(resp, data);
                 });
             },
 
@@ -281,7 +286,7 @@ define([
                 return friends;
             },
 
-            saveSelectedFriends: function (response) {
+            saveSelectedFriends: function (response, data) {
                 if (typeof response !== 'undefined') {
                     var that = this;
 
@@ -291,7 +296,8 @@ define([
                         code:          5001,
                         data_obj:      {
                             'amount':      response.to.length,
-                            'request_ids': response.request
+                            'request_ids': response.request,
+                            'data':        data
                         }
                     });
 
@@ -308,7 +314,8 @@ define([
                             that.collection_friends.create({
                                 id:         fbid + _.aa.instance.i_id,
                                 fbid:       fbid,
-                                request_id: response.request
+                                request_id: response.request,
+                                data:       data
                             });
                         });
                     }
@@ -389,8 +396,7 @@ define([
             },
 
             openGraphPost: function (obj, callback) {
-                var that = this,
-                    params = obj.params || '';
+                var that = this, params = obj.params || '';
                 require([this.facebook], function (FB) {
                     var fb_app_url = _.aa.instance.share_url + '?og-object=' + obj.object + params;
 
@@ -401,17 +407,12 @@ define([
 
                         //_.debug.log('FB login check done', resp);
 
-                        FB.api(
-                            '/me/' + _.aa.instance.fb_app_namespace + ':' + obj.action,
-                            'post',
-                            obj,
-                            function (resp) {
-                                _.debug.log('open graph resp', resp);
-                                if (typeof callback === 'function') {
-                                    callback(resp);
-                                }
+                        FB.api('/me/' + _.aa.instance.fb_app_namespace + ':' + obj.action, 'post', obj, function (resp) {
+                            _.debug.log('open graph resp', resp);
+                            if (typeof callback === 'function') {
+                                callback(resp);
                             }
-                        );
+                        });
                     });
                 });
 

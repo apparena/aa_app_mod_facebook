@@ -1,7 +1,5 @@
 define([
-    'ModelExtend',
-    'underscore',
-    'backbone'
+    'ModelExtend', 'underscore', 'backbone'
 ], function (Model, _, Backbone) {
     'use strict';
     return function () {
@@ -12,10 +10,11 @@ define([
                 module:     'aa_app_mod_facebook',
                 action:     'saveFriends',
                 fbid:       '',
-                request_id: ''
+                request_id: '',
+                data:       {}
             }
         });
 
         return Model;
-    }
+    };
 });

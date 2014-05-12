@@ -8,6 +8,7 @@ define('ROW_FB_UID', 'fb_uid');
 define('ROW_AUTH_UID', 'auth_uid');
 define('ROW_I_ID', 'i_id');
 define('ROW_DATE_ADDED', 'date_added');
+define('ROW_ADDITIONAL', 'additional');
 
 try
 {
@@ -15,9 +16,10 @@ try
     {
         throw new \Exception('Wrong request - needed params was not send by request in ' . __FILE__);
     }
-    $fb_id    = (int)$_POST['fbid'];
-    $auth_uid = (int)$_POST['auth_uid'];
+    $fb_id      = (int)$_POST['fbid'];
+    $auth_uid   = (int)$_POST['auth_uid'];
     $request_id = $_POST['request_id'];
+    $additional = $_POST['data'];
 
     // prepare sql statement
     $sql = "INSERT INTO
@@ -27,11 +29,12 @@ try
                 " . ROW_FB_UID . " = :" . ROW_FB_UID . ",
                 " . ROW_AUTH_UID . " = :" . ROW_AUTH_UID . ",
                 " . ROW_I_ID . " = :" . ROW_I_ID . ",
+                " . ROW_ADDITIONAL . " = :" . ROW_ADDITIONAL . ",
                 " . ROW_DATE_ADDED . " = FROM_UNIXTIME(:" . ROW_DATE_ADDED . ")
             ";
 
     // prepare timestamp
-    $timestamp   = $current_date->getTimestamp();
+    $timestamp = $current_date->getTimestamp();
 
     // prepare db statement and bind data
     $stmt = $db->prepare($sql);
@@ -39,6 +42,7 @@ try
     $stmt->bindParam(':' . ROW_FB_UID, $fb_id, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_AUTH_UID, $auth_uid, PDO::PARAM_INT);
     $stmt->bindParam(':' . ROW_I_ID, $i_id, PDO::PARAM_INT);
+    $stmt->bindParam(':' . ROW_ADDITIONAL, $additional, PDO::PARAM_STR);
     $stmt->bindParam(':' . ROW_DATE_ADDED, $timestamp, PDO::PARAM_STR);
 
     if ($stmt->execute())
