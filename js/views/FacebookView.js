@@ -28,7 +28,7 @@ define([
             el: $('body'),
 
             events: {
-                'click .btn-facebook': 'friendsSelector'
+                'click .btn-facebook-mfs': 'friendsSelector'
             },
 
             callbackStorage: null,
