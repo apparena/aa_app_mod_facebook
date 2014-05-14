@@ -26,7 +26,7 @@ Login, Share, Friend Selector, Send, OpenGraph Posts
     * **callback** - callback function
 * **share** - shares information over fbUiCall with information from share model
     * **callback** - callback function
-* **friendsSelector** - Shows the friend selector facebook window without currently selected friends. Is called on all elements with the css class .btn-facebook.
+* **friendsSelector** - Shows the friend selector facebook window without currently selected friends. Is called on all elements with the css class .btn-facebook-mfs.
     * **elem** - button element
     * **callback** - callback function
     * **data** - additional data, that can be stored into database. If is empty, we try to get them from the button tag data-additional. (As string)
