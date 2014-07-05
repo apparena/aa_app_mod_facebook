@@ -11,14 +11,14 @@
  * @author      "Marcus Merchel" <kontakt@marcusmerchel.de>
  * @version     1.0.0 (12.11.13 - 12:00)
  */
-namespace com\apparena\modules\facebook;
+namespace Apparena\Modules\Facebook;
 
 class getUserLog
 {
     private $_db = null;
     private $_i_id = null;
 
-    public function __construct(\com\apparena\utils\database\Database $db, $i_id)
+    public function __construct(\Apparena\Systems\Database $db, $i_id)
     {
         $this->_db         = $db;
         $this->_i_id = $i_id;
