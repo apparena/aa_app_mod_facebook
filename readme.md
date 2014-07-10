@@ -1,8 +1,7 @@
 # App-Arena.com App Module: Facebook
-**Github:** https://github.com/apparena/aa_app_mod_facebook
-**Docs:** http://www.appalizr.com/index.php/facebook.html
-
-This is a module of the [aa_app_template](https://github.com/apparena/aa_app_template)
+* **Github:** https://github.com/apparena/aa_app_mod_facebook
+* **Docs:** http://www.appalizr.com/index.php/facebook.html
+* This is a module of the [aa_app_template](https://github.com/apparena/aa_app_template)
 
 ## Module job
 Handles all interactions with the Facbook API.
