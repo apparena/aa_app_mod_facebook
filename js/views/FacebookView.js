@@ -67,21 +67,26 @@ define([
             },
 
             libInit: function () {
-                //if (!$('body').hasClass('fb-init')) {
-                require([this.facebook], function (FB) {
-                    FB.init({
-                        appId:                _.aa.instance.fb_app_id, // App ID
-                        channelUrl:           _.aa.instance.fb_canvas_url + 'channel.html', // Channel File
-                        status:               true, // check login status
-                        cookie:               true, // enable cookies to allow the server to access the session
-                        xfbml:                true, // parse XFBML
-                        oauth:                true,
-                        frictionlessRequests: true
-                    });
+                var body = $('body');
 
-                    $('body').addClass('fb-init');
+                require([this.facebook], function (FB) {
+                    if (!body.hasClass('fb-init')) {
+                        FB.init({
+                            appId:                _.aa.instance.fb_app_id, // App ID
+                            channelUrl:           _.aa.instance.fb_canvas_url + 'channel.html', // Channel File
+                            status:               true, // check login status
+                            cookie:               true, // enable cookies to allow the server to access the session
+                            xfbml:                true, // parse XFBML
+                            oauth:                true,
+                            frictionlessRequests: true
+                        });
+
+                        body.addClass('fb-init');
+
+                    } else {
+                        FB.XFBML.parse();
+                    }
                 });
-                //}
 
                 this.autoGrow();
                 return this;
